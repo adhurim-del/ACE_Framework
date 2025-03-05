@@ -68,24 +68,24 @@ import torch
 tokenizer = AutoTokenizer.from_pretrained("unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF")  # You can replace "gpt2" with another model like "EleutherAI/gpt-j-6B"
 model = AutoModelForCausalLM.from_pretrained("unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF")
 
-def chatbot(conversation, model="Qwen-1-5B-GGUF", temperature=0, max_tokens=2000):
+def chatbot(conversation, model="Qwen-1-5B-GGUF", temperature=0.7, max_tokens=200):
     try:
         spinner = Halo(text='Thinking...', spinner='dots')
         spinner.start()
         
-        response = openai.ChatCompletion.create(model=model, messages=conversation, temperature=temperature, max_tokens=max_tokens)
-        text = response['choices'][0]['message']['content'].strip()
+        inputs = tokenizer(conversation, return_tensors="pt")
+        outputs = model.generate(
+            inputs.input_ids, 
+            max_length=max_tokens, 
+            temperature=temperature, 
+            num_return_sequences=1
+        )
+        
+        text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
         spinner.stop()
         
-        return text, response['usage']['total_tokens']
+        return text, len(outputs[0])
     except Exception as oops:
-        print(f'\n\nError communicating with OpenAI: "{oops}"')
+        print(f'\n\nError communicating with model: "{oops}"')
         sleep(5)
-
-
-def chat_print(text):
-    formatted_lines = [textwrap.fill(line, width=120, initial_indent='    ', subsequent_indent='    ') for line in text.split('\n')]
-    formatted_text = '\n'.join(formatted_lines)
-    print('\n\n\nLAYER:\n\n%s' % formatted_text)
-
