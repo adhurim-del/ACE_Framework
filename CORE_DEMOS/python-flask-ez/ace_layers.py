@@ -61,9 +61,14 @@ def format_messages(messages):
         formatted_messages.append(formatted_message)
     return '\n'.join(formatted_messages)
     
-    
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
 
-def chatbot(conversation, model="gpt-4", temperature=0, max_tokens=2000):
+# Load the model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained("gpt2")  # You can replace "gpt2" with another model like "EleutherAI/gpt-j-6B"
+model = AutoModelForCausalLM.from_pretrained("gpt2")
+
+def chatbot(conversation, model="gpt-2", temperature=0, max_tokens=2000):
     try:
         spinner = Halo(text='Thinking...', spinner='dots')
         spinner.start()
