@@ -65,10 +65,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
 # Load the model and tokenizer
-tokenizer = AutoTokenizer.from_pretrained("gpt2")  # You can replace "gpt2" with another model like "EleutherAI/gpt-j-6B"
-model = AutoModelForCausalLM.from_pretrained("gpt2")
+tokenizer = AutoTokenizer.from_pretrained("unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF")  # You can replace "gpt2" with another model like "EleutherAI/gpt-j-6B"
+model = AutoModelForCausalLM.from_pretrained("unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF")
 
-def chatbot(conversation, model="gpt-2", temperature=0, max_tokens=2000):
+def chatbot(conversation, model="Qwen-1-5B-GGUF", temperature=0, max_tokens=2000):
     try:
         spinner = Halo(text='Thinking...', spinner='dots')
         spinner.start()
